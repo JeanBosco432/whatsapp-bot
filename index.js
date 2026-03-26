@@ -32,8 +32,10 @@ app.post("/webhook", async (req, res) => {
 
       console.log("Message reçu de :", from);
       console.log("Texte :", text);
+      console.log("PHONE_NUMBER_ID utilisé :", PHONE_NUMBER_ID);
+      console.log("WHATSAPP_TOKEN présent :", !!WHATSAPP_TOKEN);
 
-      await fetch(`https://graph.facebook.com/v25.0/${PHONE_NUMBER_ID}/messages`, {
+      const response = await fetch(`https://graph.facebook.com/v23.0/${PHONE_NUMBER_ID}/messages`, {
         method: "POST",
         headers: {
           "Authorization": `Bearer ${WHATSAPP_TOKEN}`,
@@ -47,6 +49,11 @@ app.post("/webhook", async (req, res) => {
           }
         })
       });
+
+      const data = await response.text();
+
+      console.log("Statut envoi Meta :", response.status);
+      console.log("Réponse Meta :", data);
     }
 
     return res.sendStatus(200);
